@@ -7,7 +7,7 @@ function Peg(numOfRings = 0) {
 }
 
 function Board(numOfPegs = 3) {
-  const numOfRings = 5
+  const numOfRings = 5;
 
   this.pegs = {
     1: new Peg(numOfRings),
@@ -38,6 +38,12 @@ function Board(numOfPegs = 3) {
       moved = true;
     }
 
+    console.log(this.winner());
+
+    if (this.winner()) {
+      return this.printBoard('Winner winner chicken dinner!');
+    }
+
     this.printBoard(
       moved
         ? 'That move was successful, board is \x1b[35mnow\x1b[0m:'
@@ -60,15 +66,15 @@ function Board(numOfPegs = 3) {
   };
 
   this.winner = function () {
-    // const finalPeg = this.pegs[numOfPegs].rings;
-    const finalPeg = [5,4,3,2,1];
-    
+    const finalPeg = this.pegs[numOfPegs].rings;
+    // const finalPeg = [5, 3, 2, 1];
 
     const correct = finalPeg.map((element, index) => {
-      
-    })
-    console.log(finalPeg);
-  }
+      return element === numOfRings - index ? true : false;
+    });
+
+    return correct.every((v) => v);
+  };
 }
 
 const game = new Board(3);
