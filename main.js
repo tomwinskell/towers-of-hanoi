@@ -38,10 +38,8 @@ function Board(numOfPegs = 3) {
       moved = true;
     }
 
-    console.log(this.winner());
-
     if (this.winner()) {
-      return this.printBoard('Winner winner chicken dinner!');
+      return this.printBoard('You won!');
     }
 
     this.printBoard(
@@ -66,8 +64,12 @@ function Board(numOfPegs = 3) {
   };
 
   this.winner = function () {
-    const finalPeg = this.pegs[numOfPegs].rings;
-    // const finalPeg = [5, 3, 2, 1];
+    // const finalPeg = this.pegs[numOfPegs].rings;
+    const finalPeg = [5, 3, 2, 1];
+
+    if (finalPeg.length < numOfRings) {
+      return false;
+    }
 
     const correct = finalPeg.map((element, index) => {
       return element === numOfRings - index ? true : false;
@@ -79,7 +81,48 @@ function Board(numOfPegs = 3) {
 
 const game = new Board(3);
 
-game.moveDisc(1, 2);
-game.moveDisc(2, 3);
+const startGame = function () {
+  let numOfPegs = prompt(
+    'Enter number of pegs to play with:\nLeave blank for default, which is 3'
+  );
+  if (!numOfPegs) {
+    numOfPegs = 3;
+  }
 
-game.winner();
+  const game = new Board(numOfPegs);
+
+  const pegNumsStr = Array(numOfPegs)
+    .fill()
+    .reduce((acc, _, i) => {
+      acc.push(i + 1);
+      return acc;
+    }, [])
+    .join(' ,');
+
+  game.printBoard();
+
+  let quit = false;
+  while (!game.winner()) {
+    let start;
+    while (!start && !quit) {
+      start = prompt(
+        `Enter ${pegNumsStr} to move ring from:\n(enter 'quit' to quit.)`
+      );
+      start === 'quit' ? (quit = true) : null;
+    }
+    let end;
+    while (!end && !quit) {
+      end = prompt("Move peg to:\n(enter 'quit' to quit.)");
+      start === 'quit' ? (quit = true) : null;
+    }
+
+    if (quit) {
+      console.log('You quit.');
+      break;
+    }
+
+    game.moveDisc(start, end);
+  }
+};
+
+startGame();
