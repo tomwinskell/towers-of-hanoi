@@ -44,8 +44,9 @@ function Board(numOfPegs = 3) {
 
     this.printBoard(
       moved
-        ? 'That move was successful, board is \x1b[35mnow\x1b[0m:'
-        : 'You cannot move a larger disc on top \x1b[35mof\x1b[0m a smaller one, board is \x1b[35mstill\x1b[0m:'
+        ? `That move was successful, board is \x1b[35mnow\x1b[0m:`
+        : `You cannot move a larger disc on top \x1b[35mof\x1b[0m
+        a smaller one, board is \x1b[35mstill\x1b[0m:`
     );
   };
 
@@ -83,7 +84,8 @@ const game = new Board(3);
 
 const startGame = function () {
   let numOfPegs = prompt(
-    'Enter number of pegs to play with:\nLeave blank for default, which is 3'
+    `Enter number of pegs to play with:
+    \nLeave blank for default, which is 3`
   );
   if (!numOfPegs) {
     numOfPegs = 3;
@@ -106,7 +108,8 @@ const startGame = function () {
     let start;
     while (!start && !quit) {
       start = prompt(
-        `Enter ${pegNumsStr} to move ring from:\n(enter 'quit' to quit.)`
+        `Enter ${pegNumsStr} to move ring from:
+        \n(enter 'quit' to quit.)`
       );
       start === 'quit' ? (quit = true) : null;
     }
