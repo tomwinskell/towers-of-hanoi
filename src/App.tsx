@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import Form from './components/Form';
 import Peg from './components/Peg';
@@ -11,7 +11,8 @@ function App() {
   const [started, setStarted] = useState(false);
   const [pegsJsx, setPegsJsx] = useState<React.ReactNode[]>([]);
   const [gameBoard, setGameBoard] = useState<BoardInstance | undefined>();
-  const [clickCount, setClickCount] = useState<number>(0);
+  const clickCount = useRef(0);
+  const firstPeg = useRef<number | null>(null);
   // const [firstPeg, setFirstPeg] = useState<number | null>();
 
   const messages = {
@@ -22,52 +23,35 @@ function App() {
   const [message, setMessage] = useState(messages.first);
 
   const handleClick = (key: number): void => {
-    if (clickCount === 0) {
-      console.log(0);
-    } else if (clickCount === 1) {
-      console.log(1);
+    if (clickCount.current === 0) {
+      clickCount.current++;
+      firstPeg.current = key;
+    } else if (clickCount.current === 1) {
+      clickCount.current = 0;
+      console.log(firstPeg.current, key);
     }
-
-    // setClickCount((prev) => {
-    //   const newCount = prev + 1;
-    //   if (newCount === 1) {
-    //     console.log('first click');
-    //     setMessage(messages.second);
-    //     setFirstPeg(key);
-    //   }
-    //   if (newCount === 2) {
-    //     console.log('second click');
-    //     setClickCount(0);
-    //     const secondPeg = key;
-    //     if (gameBoard && firstPeg && secondPeg) {
-    //       const message = gameBoard.moveDisc(firstPeg, secondPeg);
-    //       setMessage(message + '. ' + messages.first);
-    //     }
-    //   }
-    //   return newCount;
-    // });
   };
 
   const handleStart = (numOfPegs: number) => {
     setStarted(!started);
     const game = startGame(numOfPegs);
     setGameBoard(game);
-    setClickCount(0);
+
     setMessage(messages.first);
   };
 
   useEffect(() => {
-  if (gameBoard) {
-    const newPegsJsx = Object.keys(gameBoard.pegs).map((key) => (
-      <Peg
-        key={key}
-        pegNum={parseInt(key)}
-        rings={gameBoard.pegs[Number(key)].rings}
-        handleClick={handleClick}
-      />
-    ));
-    setPegsJsx(newPegsJsx);
-  }
+    if (gameBoard) {
+      const newPegsJsx = Object.keys(gameBoard.pegs).map((key) => (
+        <Peg
+          key={key}
+          pegNum={parseInt(key)}
+          rings={gameBoard.pegs[Number(key)].rings}
+          handleClick={handleClick}
+        />
+      ));
+      setPegsJsx(newPegsJsx);
+    }
   }, [gameBoard]);
 
   return (

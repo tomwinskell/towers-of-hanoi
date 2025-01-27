@@ -47,10 +47,6 @@ class Board {
       return `${startRing} moved to peg ${end}.`;
     }
 
-    // if (this.winner()) {
-    //   return this.printBoard('You won!');
-    // }
-
     return `Cannot move ${startRing} on top of ${endRing}`;
   };
 
