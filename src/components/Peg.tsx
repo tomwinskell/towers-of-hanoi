@@ -1,15 +1,16 @@
 import Ring from './Ring';
 
 interface PegProps {
+  pegNum: number;
   rings: number[];
-  handleClick: () => void;
+  handleClick: (key: number) => void;
 }
 
-export default function Peg({ rings, handleClick }: PegProps) {
+export default function Peg({ pegNum, rings, handleClick }: PegProps) {
   return (
     <div
       className="h-40 relative w-1/3 flex flex-col-reverse items-center justify-start"
-      onClick={() => handleClick()}
+      onClick={() => handleClick(pegNum)}
     >
       {rings.map((num) => {
         return <Ring key={num} ringNum={num} />;
