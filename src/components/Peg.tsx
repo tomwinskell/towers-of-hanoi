@@ -9,7 +9,7 @@ interface PegProps {
 export default function Peg({ pegNum, rings, handleClick }: PegProps) {
   return (
     <div
-      className="h-40 relative w-1/3 flex flex-col-reverse items-center justify-start"
+      className="h-40 relative w-1/3 flex flex-col-reverse items-center justify-start cursor-pointer rounded-3xl hover:bg-blue-100"
       onClick={() => handleClick(pegNum)}
     >
       {rings.map((num) => {

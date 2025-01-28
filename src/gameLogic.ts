@@ -29,48 +29,48 @@ class Board {
         this.pegs[index + 2] = new Peg();
       });
   }
-
-  moveDisc = (start: number, end: number) => {
-    const startRings = this.pegs[start].rings;
-    const endRings = this.pegs[end].rings;
-
-    const startRing = startRings[startRings.length - 1];
-    let endRing = endRings[endRings.length - 1];
-
-    if (endRings.length === 0) {
-      endRing = this.numOfRings;
-    }
-
-    if (startRing < endRing) {
-      startRings.pop();
-      endRings.push(startRing);
-      return `${startRing} moved to peg ${end}.`;
-    }
-
-    return `Cannot move ${startRing} on top of ${endRing}`;
-  };
-
-  printBoard = () => {
-    return this;
-  };
-
-  // winner = () => {
-  //   const finalPeg = this.pegs[this.numOfPegs].rings;
-
-  //   if (finalPeg.length < this.numOfRings) {
-  //     return false;
-  //   }
-
-  //   const correct = finalPeg.map((element: number, index: number) => {
-  //     return element === this.numOfRings - index ? true : false;
-  //   });
-
-  //   return correct.every((v: boolean) => v);
-  // };
 }
 
-export default function startGame(numOfPegs: number = 3): Board {
+const checkWinner = (board: BoardInstance) => {
+  const finalPeg = board.pegs[board.numOfPegs].rings;
+
+  if (finalPeg.length < board.numOfRings) {
+    return false;
+  }
+
+  const correct = finalPeg.map((element: number, index: number) => {
+    return element === board.numOfRings - index ? true : false;
+  });
+
+  return correct.every((v: boolean) => v);
+};
+
+const moveDisc = (
+  start: number,
+  end: number,
+  board: BoardInstance
+): { startRings: number[]; endRings: number[] } | undefined => {
+  const startRings = board.pegs[start].rings;
+  const endRings = board.pegs[end].rings;
+
+  const startRing = startRings[startRings.length - 1];
+  let endRing = endRings[endRings.length - 1];
+
+  if (endRings.length === 0) {
+    endRing = board.numOfRings;
+  }
+
+  if (startRing <= endRing) {
+    startRings.pop();
+    endRings.push(startRing);
+    return { startRings, endRings };
+  }
+};
+
+const startGame = (numOfPegs: number = 3): Board => {
   const game = new Board(numOfPegs);
 
   return game;
-}
+};
+
+export { startGame, moveDisc, checkWinner };
