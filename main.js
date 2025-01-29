@@ -1,23 +1,19 @@
-function Peg(numOfRings = 0) {
-  this.rings = Array(numOfRings)
-    .fill(0)
-    .map((_, index) => {
-      return numOfRings - index;
-    });
+function Peg(numOfRings = 5) {
+  this.rings = [...Array(numOfRings)].map((_, index) => {
+    return numOfRings - index;
+  });
 }
 
 function Board(numOfPegs = 3) {
   const numOfRings = 5;
 
   this.pegs = {
-    1: new Peg(numOfRings),
+    1: new Peg(),
   };
 
-  Array(numOfPegs - 1)
-    .fill(0)
-    .map((_, index) => {
-      this.pegs[index + 2] = new Peg();
-    });
+  Array.from({ length: numOfPegs - 1 }).map((_, index) => {
+    this.pegs[index + 2] = new Peg(0);
+  });
 
   this.moveDisc = function (start, end) {
     const startRings = this.pegs[start].rings;
@@ -25,29 +21,41 @@ function Board(numOfPegs = 3) {
 
     const startRing = startRings[startRings.length - 1];
     let endRing = endRings[endRings.length - 1];
-
     if (endRings.length === 0) {
       endRing = numOfRings;
     }
-
-    let moved = false;
-
     if (startRing < endRing) {
       startRings.pop();
       endRings.push(startRing);
-      moved = true;
+      this.printBoard(messages.success);
+    } else {
+      this.printBoard(messages.unsuccess);
     }
+  };
 
-    if (this.winner()) {
-      return this.printBoard('You won!');
+  this.loopGame = function (pegNumsStr) {
+    while (!this.winner(numOfRings)) {
+      let start;
+      let quit;
+      while (!start && !quit || start < 0 || start > numOfRings) {
+        start = prompt(`Enter ${pegNumsStr} to move ring from:
+    \n(enter 'quit' to quit.)`);
+        start === 'quit' ? (quit = true) : null;
+      }
+      let end;
+      while (!end && !quit || end < 0 || end > numOfRings) {
+        end = prompt("Move peg to:\n(enter 'quit' to quit.)");
+        end === 'quit' ? (quit = true) : null;
+      }
+
+      if (quit) {
+        console.log('You quit.');
+        break;
+      }
+
+      this.moveDisc(start, end);
     }
-
-    this.printBoard(
-      moved
-        ? `That move was successful, board is \x1b[35mnow\x1b[0m:`
-        : `You cannot move a larger disc on top \x1b[35mof\x1b[0m
-        a smaller one, board is \x1b[35mstill\x1b[0m:`
-    );
+    this.winner(numOfRings);
   };
 
   this.printBoard = function (string = 'The board is currently:') {
@@ -64,37 +72,42 @@ function Board(numOfPegs = 3) {
     console.log(toPrint);
   };
 
-  this.winner = function () {
-    // const finalPeg = this.pegs[numOfPegs].rings;
-    const finalPeg = [5, 3, 2, 1];
+  this.winner = function (numOfRings) {
+    const finalPeg = this.pegs[numOfPegs].rings;
 
-    if (finalPeg.length < numOfRings) {
-      return false;
+    if (finalPeg.length === numOfRings) {
+      const winner = finalPeg
+        .map((element, index) => {
+          return element === numOfRings - index ? true : false;
+        })
+        .every((v) => v);
+
+      if (winner) {
+        console.log(messages.won);
+        return true;
+      }
     }
-
-    const correct = finalPeg.map((element, index) => {
-      return element === numOfRings - index ? true : false;
-    });
-
-    return correct.every((v) => v);
+    return false;
   };
 }
 
-const game = new Board(3);
+const messages = {
+  start: `Enter number of pegs to play with:
+    \nLeave blank for default, which is 3`,
+  won: 'You won!',
+  success: `That move was successful, board is \x1b[35mnow\x1b[0m:`,
+  unsuccess: `You cannot move a larger disc on top \x1b[35mof\x1b[0m
+      a smaller one, board is \x1b[35mstill\x1b[0m:`,
+};
 
 const startGame = function () {
-  let numOfPegs = prompt(
-    `Enter number of pegs to play with:
-    \nLeave blank for default, which is 3`
-  );
-  if (!numOfPegs) {
+  let numOfPegs = parseInt(prompt(messages.start));
+  if (!numOfPegs || numOfPegs < 3 || numOfPegs > 6) {
     numOfPegs = 3;
   }
 
   const game = new Board(numOfPegs);
-
-  const pegNumsStr = Array(numOfPegs)
-    .fill()
+  const pegNumsStr = [...Array(numOfPegs)]
     .reduce((acc, _, i) => {
       acc.push(i + 1);
       return acc;
@@ -102,30 +115,8 @@ const startGame = function () {
     .join(' ,');
 
   game.printBoard();
+  game.loopGame(pegNumsStr);
 
-  let quit = false;
-  while (!game.winner()) {
-    let start;
-    while (!start && !quit) {
-      start = prompt(
-        `Enter ${pegNumsStr} to move ring from:
-        \n(enter 'quit' to quit.)`
-      );
-      start === 'quit' ? (quit = true) : null;
-    }
-    let end;
-    while (!end && !quit) {
-      end = prompt("Move peg to:\n(enter 'quit' to quit.)");
-      start === 'quit' ? (quit = true) : null;
-    }
-
-    if (quit) {
-      console.log('You quit.');
-      break;
-    }
-
-    game.moveDisc(start, end);
-  }
 };
 
 startGame();
