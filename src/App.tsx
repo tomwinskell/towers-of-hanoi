@@ -9,8 +9,8 @@ import type { BoardInstance } from './gameLogic';
 import Winner from './components/Winner';
 
 function App() {
-  const [started, setStarted] = useState(true);
-  const [winner, setWinner] = useState(true);
+  const [started, setStarted] = useState(false);
+  const [winner, setWinner] = useState(false);
   const [gameBoard, setGameBoard] = useState<BoardInstance | undefined>();
 
   const clickCount = useRef(0);
