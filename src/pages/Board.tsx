@@ -13,7 +13,7 @@ export default function Game({
     <div className="flex flex-col justify-center items-center">
       <div className="flex w-lg justify-center">{children}</div>
       <div className="w-xl bg-amber-700 rounded-xl p-2"></div>
-      <p className='mt-5'>{message}</p>
+      <p className="mt-5 text-xl font-extrabold">{message}</p>
     </div>
   );
 }

@@ -69,7 +69,6 @@ const moveDisc = (
 
 const startGame = (numOfPegs: number = 3): Board => {
   const game = new Board(numOfPegs);
-
   return game;
 };
 
