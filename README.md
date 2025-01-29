@@ -1,50 +1,37 @@
-# React + TypeScript + Vite
+# Towers of Hanoi 🏗️  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A **React + TypeScript + Vite** implementation of the **Towers of Hanoi** puzzle.  
 
-Currently, two official plugins are available:
+## 🚀 Features  
+- Click on rings to move them between pegs  
+- Supports a custom number of pegs  
+- Tailwind for styling  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠️ Tech Stack  
+- **React** (UI)  
+- **TypeScript** (type safety)  
+- **Vite** (fast dev environment)  
+- **Tailwind CSS** (styling)  
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 📦 Installation  
+```sh
+git clone -b react https://github.com/tomwinskell/towers-of-hanoi.git
+cd towers-of-hanoi
+npm install
+npm run dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## 🎮 How to Play  
+1. Click a ring to pick it up, then click a peg to place it.  
+2. Move all rings to last peg, following the rules:  
+   - Only one ring can be moved at a time.  
+   - A larger ring cannot be placed on a smaller ring.  
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## 🔍 Learnings & Structure  
+- **Game logic** is kept separate in `gameLogic.ts`.  
+- **`useRef`** is used for values that persist across renders without causing re-renders.  
+- **JSX rules**: Certain JavaScript (like conditionals) must use `&&` or a ternary.  
+- **Tailwind limitation**: Class names must be present at compile time, so conditional rendering of classes isn’t possible.  
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## 📜 License  
+MIT
