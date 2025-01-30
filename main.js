@@ -5,8 +5,29 @@ function Peg(numOfRings = 5) {
 }
 
 function Board() {
+  this.createPegStr = function (numOfPegs) {
+    return [...Array(numOfPegs)]
+      .reduce((acc, _, i) => {
+        acc.push(i + 1);
+        return acc;
+      }, [])
+      .join(' ,');
+  };
+
+  this.messages = {
+    start: `Enter number of pegs to play with:
+      \nLeave blank for default, which is 3`,
+    won: `You won!`,
+    success: `That move was successful, board is \x1b[35mnow\x1b[0m:`,
+    unsuccess: `You cannot move a larger disc on top \x1b[35mof\x1b[0m 
+    a smaller one, board is \x1b[35mstill\x1b[0m:`,
+    startPrompt: `Enter ${this.createPegStr(this.numOfPegs)} to move ring from:
+    \n(enter 'quit' to quit.)`,
+    endPrompt: `Move peg to:\n(enter 'quit' to quit.)`,
+  };
+
   this.getNumPegs = function () {
-    let numOfPegs = parseInt(prompt(messages.start));
+    let numOfPegs = parseInt(prompt(this.messages.start));
     if (!numOfPegs || numOfPegs < 3 || numOfPegs > 6) {
       numOfPegs = 3;
     }
@@ -37,43 +58,29 @@ function Board() {
     if (startRing <= endRing) {
       startRings.pop();
       endRings.push(startRing);
-      this.printBoard(messages.success);
+      this.printBoard(this.messages.success);
     } else {
-      this.printBoard(messages.unsuccess);
+      this.printBoard(this.messages.unsuccess);
     }
-  };
-
-  this.createPegStr = function (numOfPegs) {
-    return [...Array(numOfPegs)]
-      .reduce((acc, _, i) => {
-        acc.push(i + 1);
-        return acc;
-      }, [])
-      .join(' ,');
   };
 
   this.startGame = function () {
     this.build();
     this.printBoard();
-    this.loopGame(
-      this.createPegStr(this.numOfPegs),
-      this.numOfRings,
-      this.numOfPegs
-    );
+    this.loopGame(this.numOfRings, this.numOfPegs);
   };
 
-  this.loopGame = function (pegNumsStr, numOfRings, numOfPegs) {
+  this.loopGame = function (numOfRings, numOfPegs) {
     while (!this.winner(numOfRings, numOfPegs)) {
       let start;
       let quit;
       while ((!start && !quit) || start < 0 || start > numOfRings) {
-        start = prompt(`Enter ${pegNumsStr} to move ring from:
-    \n(enter 'quit' to quit.)`);
+        start = prompt(this.messages.startPrompt);
         start === 'quit' ? (quit = true) : null;
       }
       let end;
       while ((!end && !quit) || end < 0 || end > numOfRings) {
-        end = prompt("Move peg to:\n(enter 'quit' to quit.)");
+        end = prompt(this.messages.endPrompt);
         end === 'quit' ? (quit = true) : null;
       }
 
@@ -111,22 +118,13 @@ function Board() {
         .every((v) => v);
 
       if (winner) {
-        console.log(messages.won);
+        console.log(this.messages.won);
         return true;
       }
     }
     return false;
   };
 }
-
-const messages = {
-  start: `Enter number of pegs to play with:
-    \nLeave blank for default, which is 3`,
-  won: 'You won!',
-  success: `That move was successful, board is \x1b[35mnow\x1b[0m:`,
-  unsuccess: `You cannot move a larger disc on top \x1b[35mof\x1b[0m
-      a smaller one, board is \x1b[35mstill\x1b[0m:`,
-};
 
 const game = new Board();
 game.startGame();
