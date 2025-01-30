@@ -2,7 +2,7 @@ function Peg(numOfRings = 5) {
   this.rings = [...Array(numOfRings)].map((_, index) => {
     return numOfRings - index;
   });
-}
+};
 
 function Board() {
   this.createPegStr = function (numOfPegs) {
@@ -124,7 +124,7 @@ function Board() {
     }
     return false;
   };
-}
+};
 
 const game = new Board();
 game.startGame();
